@@ -33,11 +33,11 @@ jobs:
       - name: Build release AAB
         run: ./gradlew bundleRelease
 
-      - name: Sign APK
+      - name: Sign AAB
         id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/debug
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.KEY_BASE_64_RELEASE }}
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -49,7 +49,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: WAPP_QA
-          file: app/release/app-release.aab
+          file: app/build/outputs/bundle/release/app-release.aab
         
       - name: Send Success Message
         if: ${{ success() }}
@@ -62,25 +62,12 @@ jobs:
             [
               { 
                 "author": {
-                  "name": "${{ github.event.pull_request.user.login }}",
+                  "name": "WAPP Release",
                   "url": "https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true",
-                  "icon_url": "${{ github.event.pull_request.user.avatar_url }}"
                 },
-                "title": "PR 성공, 영! 차! 조! 와! 써 ~ 🚚🚚\n#${{ github.event.pull_request.number }} : ${{ github.event.pull_request.title }}",
+                "title": "릴리즈 성공, 자 두 과 자 ~ 🔥🔥",
                 "color": 10478271,
-                "description": "${{ github.event.pull_request.html_url }}",
-                "fields": [
-                  {
-                    "name": "Base Branch",
-                    "value": "${{ github.base_ref }}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Compare Branch",
-                    "value": "${{ github.head_ref }}",
-                    "inline": true
-                  }
-                ]
+                "description": "메일에 새로운 릴리즈 앱 배송완료했어요!",
               }
             ]
             
@@ -95,24 +82,11 @@ jobs:
             [
               { 
                 "author": {
-                  "name": "${{ github.event.pull_request.user.login }}",
+                  "name": "WAPP Release",
                   "url": "https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true",
-                  "icon_url": "${{ github.event.pull_request.user.avatar_url }}"
                 },
-                "title": "PR 실패, 삐용삐용~ 🚑🚑\n#${{ github.event.pull_request.number }} : ${{ github.event.pull_request.title }}",
+                "title": "릴리즈 실패, 누가 이렇게 하래. 🤬🤬",
                 "color": 13458524,
-                "description": "${{ github.event.pull_request.html_url }}",
-                "fields": [
-                  {
-                    "name": "Base Branch",
-                    "value": "${{ github.base_ref }}",
-                    "inline": true
-                  },
-                  {
-                    "name": "Compare Branch",
-                    "value": "${{ github.head_ref }}",
-                    "inline": true
-                  }
-                ]
+                "description": "다시 릴리즈 해오세요. 삐빅",
               }
             ]
